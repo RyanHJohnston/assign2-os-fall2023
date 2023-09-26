@@ -1,0 +1,8 @@
+You finished the first part (one thread).
+The first thread is printing returning a sorted array and average of sorted array.
+This is good.
+Problem is, it's an absolute mess, memory wise.
+Before writing more code, you need to properly free the memory from the heap.
+
+Focus on the sort_thread_avg function, that's where the heap mess is.
+You should be able to work on two threads afterwards.
