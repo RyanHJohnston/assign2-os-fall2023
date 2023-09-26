@@ -1,0 +1,50 @@
+here is the high level idea!
+
+main()
+{
+n will be given as command line argument
+struct timespec ts_begin, ts_end;
+double elapsed;  
+
+create array A ( n double values) and randomly generate these values 
+also create arrays B and C with the same size of A
+                   Afirsthalf and AsecondHalf with the half size of A
+
+//-------------------- ONE THREAD CASE --------------------
+copy A into B
+clock_gettime(CLOCK_MONOTONIC, &ts_begin);  
+create thB sortThread_avg to sort B and compute its average 
+      /* implement selection or insertion sort O(n^2) */
+      /* return sorted array and overallAvg */ 
+join thB
+
+clock_gettime(CLOCK_MONOTONIC, &ts_end);  
+elapsed = ts_end.tv_sec - ts_begin.tv_sec; 
+elapsed += (ts_end.tv_nsec - ts_begin.tv_nsec) / 1000000000.0; 
+
+Sorting by ONE thread is done in elapsed*1000 ms    
+Print average and at least first 10 values of the the sorted array
+
+ //-------------------- TWO THREADS CASE --------------------
+copy A into Afirsthalf  and AsecondHalf
+clock_gettime(CLOCK_MONOTONIC, &ts_begin);  
+create thA1  sortThread_avg to sort Afirsthalf and compute AfirstAvg  /* use selection/insertion sort O((n/2)^2) */
+create thA2  sortThread to sort Asecondhalf  and compute AsecondAvg   /* use selection/insertion sort O((n/2)^2) */
+
+join thA1
+join thA2
+
+create thM  mergeThread_avg by paasing Afirsthalf, Asecondhalf, AfirstAvg, AfirstAvg 
+    /* make sure this just merges the sorted values form two arrays while keeping them sorted.  O(n) */
+    /* dont' copy these arrays and then call sort! which will be like sorting the whole thing! */
+    /* and simply computes overalAvg = (AfirstAvg + AfirstAvg)/2,   */
+    /* return merged/sorted array and overallAvg  */
+
+join thM
+clock_gettime(CLOCK_MONOTONIC, &ts_end);  
+elapsed = ts_end.tv_sec - ts_begin.tv_sec; 
+elapsed += (ts_end.tv_nsec - ts_begin.tv_nsec) / 1000000000.0; 
+
+Sorting by TWO threads is done in elapsed*1000 ms     
+Print overallAvg and at least first 10 values of the the sorted array
+}
