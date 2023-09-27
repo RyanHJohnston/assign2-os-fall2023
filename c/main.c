@@ -1,3 +1,4 @@
+
 #include <bits/time.h>
 #include <errno.h>
 #include <stddef.h>
@@ -8,8 +9,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
-
-
 
 #define DOUBLE_MIN 0.0
 #define DOUBLE_MAX 1.0
@@ -30,8 +29,6 @@ void copy_array(double *src, double *dest, int length, int index);
 
 /* Thread Functions */
 void *sort_thread_avg(void *arg);
-
-
 
 /****************** DRIVER **********************************/
 int 
@@ -273,6 +270,4 @@ sort_thread_avg(void *arg)
 
     pthread_exit(data);
 }
-
-
 
