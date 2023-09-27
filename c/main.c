@@ -9,6 +9,8 @@
 #include <ctype.h>
 #include <time.h>
 
+
+
 #define DOUBLE_MIN 0.0
 #define DOUBLE_MAX 1.0
 #define COPY_ARRAY_INDEX 0
@@ -51,6 +53,8 @@ main(int argc, char *argv[])
 
     // thread IDs
     pthread_t tid_1;
+    pthread_t tid_2;
+    pthread_t tid_3;
 
     // Dynamic arrays
     double elapsed;
@@ -93,7 +97,7 @@ main(int argc, char *argv[])
         fprintf(stderr, "ERROR: Parameter must be an even integer\n");
         exit(EXIT_FAILURE);
     }
-
+    
     // Allocate the arrays
     A_byte_size = sizeof(double) * n;
     A = (double*)malloc(A_byte_size);
@@ -111,38 +115,41 @@ main(int argc, char *argv[])
     
 
     /********************* ONE THREAD CASE *************************/
-    // copy A into B
     copy_array(A, B, n, COPY_ARRAY_INDEX);
     clock_gettime(CLOCK_MONOTONIC, &ts_begin);
     ThreadData *B_data = (ThreadData*)malloc(sizeof(ThreadData));
     B_data->array = B;
     B_data->length = n;
     
-    /*
-     * HERE YOU ARE GETTING THE CORRECT AVERAGE BUT IT IS NOT RETURNING THE SORTED ARRAY
-     * DONE! I NEEDED TO WORK WITH THE ARRAY STRUCT
-     */
     pthread_create(&tid_1, NULL, sort_thread_avg, (void *)B_data);
     pthread_join(tid_1, (void **)&B_data);
 
     clock_gettime(CLOCK_MONOTONIC, &ts_end);
     elapsed = ts_end.tv_sec - ts_begin.tv_sec;
     elapsed += (ts_end.tv_nsec - ts_begin.tv_nsec) / 1000000000.0;
-
+    
     /* Sorting is done in 10.0ms when two threads are used */
-    /* Print average and at least first 10 values of the sorted array */
+    fprintf(stdout, "Sorting is done in %f when one thread is used\n",
+            elapsed);
     if (n < 10) {
-        fprintf(stdout, "Average of sorted array: %f\n", *B_data->avg);
+        fprintf(stdout, "Average of sorted array: %10f ms\n", *B_data->avg);
         print_array(B_data->array, n);
     } else {
         fprintf(stdout, "Average of sorted array: %f\n", *B_data->avg);
         print_array(B_data->array, 10);
     }
     
+    free(B_data->avg);
+    free(B_data);
+
 
     /*********** TWO THREADS CASE *********************/
+    /* copy A into A_first_half and A_second_half */
+    copy_array(A, A_first_half, n / 2, COPY_ARRAY_INDEX);
+    copy_array(A, A_second_half, n / 2, COPY_ARRAY_INDEX);
+    
 
-
+    /*********** FREE MEMORY *****************/
     free(A);
     free(B);
     free(C);
@@ -209,10 +216,10 @@ selection_sort(double *array, int n)
     int i;
     int j;
     int min_index;
-
-    // one by one move the boundary of the unsorted array
+    
+    /* one by one move the boundary of the unsorted array */
     for (i = 0; i < n - 1; ++i) {
-        // find the minimum element in the unsorted array
+        /* find the minimum element in the unsorted array */
         min_index = i;
         for (j = i + 1; j < n; ++j) {
             if (array[j] < array[min_index]) {
@@ -220,43 +227,51 @@ selection_sort(double *array, int n)
             }
         }
         
-        // swap the found min element with the first element
+        /* swap the found min element with the first element */
         swap(&array[min_index], &array[i]);
     }
 }
 
-/*
- * sort array and compute its average
- * uses Selection Sort algorithm
- * returns sorted array and overall average
- */
 void *
 sort_thread_avg(void *arg)
 {
     ThreadData *data;
     double *array;
     double *avg;
-    double sum;
+    double sum = 0.0;
     int length;
     int i;
 
     data = (ThreadData*)arg;
     array = (double*)malloc(sizeof(double) * data->length);
+    
+    /* checks for successful memory allocation */
+    if(!array) {   
+        pthread_exit(NULL);
+    }
+    
     length = data->length;
     copy_array(data->array, array, data->length, COPY_ARRAY_INDEX);
     avg = (double*)malloc(sizeof(double));
+
+    /* checks for successful memory allocation */
+    if(!avg) { 
+        free(array);  /* free previously allocated memory */
+        pthread_exit(NULL);
+    }
     
     selection_sort(data->array, data->length);
     
-    // NOW FIND THE AVERAGE
+    /* Find the average */
     for (i = 0; i < length; ++i) {
         sum += data->array[i];
     }
-
     *avg = sum / length;
     data->avg = avg;
+    
+    free(array);  /* Free memory allocated for array */
+
     pthread_exit(data);
-    /* pthread_exit(avg); */
 }
 
 
