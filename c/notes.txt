@@ -6,3 +6,14 @@ Before writing more code, you need to properly free the memory from the heap.
 
 Focus on the sort_thread_avg function, that's where the heap mess is.
 You should be able to work on two threads afterwards.
+
+9/27/23
+On the fox servers, the full compile command is gcc -Wall -g -pthread main.c lib.c -o main.o.
+It won't compile without the -pthread flag, I think this is due to the servers still being in ubuntu
+14.
+Also!!!!??? It says there are absolutely no memory leaks when compiling in the servers but there are
+only 13 frees and 17 allocations in my local machine on arch???
+I wonder why that is?
+Anyways, it's good to know that my memory management intution works perfectly on the fox servers.
+Not sure if it's a human error or not.
+I'll work on the project later tonight after writing out the proofs for quantum logic.
