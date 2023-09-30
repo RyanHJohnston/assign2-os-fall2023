@@ -93,15 +93,15 @@ main(int argc, char *argv[])
     elapsed += (ts_end.tv_nsec - ts_begin.tv_nsec) / 1000000000.0;
     
     /* Sorting is done in 10.0ms when one thread is used */
-    fprintf(stdout, "Sorting is done in %f when one thread is used\n",
+    fprintf(stdout, "Sorting is done in %f ms when one thread is used\n",
             elapsed * 1000);
-    if (n < 10) {
-        fprintf(stdout, "Average of sorted array: %10f ms\n", *B_data->avg);
-        print_array(B_data->array, n);
-    } else {
-        fprintf(stdout, "Average of sorted array: %f\n", *B_data->avg);
-        print_array(B_data->array, 10);
-    }
+    /* if (n < 10) { */
+    /*     fprintf(stdout, "Average of sorted array: %10f ms\n", *B_data->avg); */
+    /*     print_array(B_data->array, n); */
+    /* } else { */
+    /*     fprintf(stdout, "Average of sorted array: %f\n", *B_data->avg); */
+    /*     print_array(B_data->array, 10); */
+    /* } */
     
     free(B_data->avg);
     free(B_data);
@@ -132,12 +132,12 @@ main(int argc, char *argv[])
     pthread_create(&tid_3, NULL, sort_thread_avg, (void *)A_second_half_data);
     pthread_join(tid_2, (void **)&A_first_half_data);
     pthread_join(tid_3, (void **)&A_second_half_data);
-
+    
     MergedThreadData *merged_data = (MergedThreadData*)malloc(sizeof(MergedThreadData));
     merged_data->th_data_0 = malloc(sizeof(ThreadData));
     merged_data->th_data_1 = malloc(sizeof(ThreadData));
     merged_data->th_merged_data = malloc(sizeof(ThreadData));
-
+        
     merged_data->th_data_0->array = A_first_half_data->array;
     merged_data->th_data_1->array = A_second_half_data->array;
     merged_data->th_data_0->avg = A_first_half_data->avg;
@@ -152,17 +152,17 @@ main(int argc, char *argv[])
     elapsed = ts_end.tv_sec - ts_begin.tv_sec;
     elapsed += (ts_end.tv_nsec - ts_begin.tv_nsec) /  1000000000.0;
     
-    fprintf(stdout, "Sorting by two threads is done in %f ms\n",
+    fprintf(stdout, "Sorting is done in %f ms when two threads are used\n",
             elapsed * 1000);
-    if (merged_data->th_merged_data->length < 10) {
-        fprintf(stdout, "Average of merged sorted array: %f\n",
-                *merged_data->th_merged_data->avg);
-        print_array(merged_data->th_merged_data->array, n);
-    } else {
-        fprintf(stdout, "Average of merged sorted array: %f\n",
-                *merged_data->th_merged_data->avg);
-        print_array(merged_data->th_merged_data->array, 10);
-    }
+    /* if (merged_data->th_merged_data->length < 10) { */
+    /*     fprintf(stdout, "Average of merged sorted array: %f\n", */
+    /*             *merged_data->th_merged_data->avg); */
+    /*     print_array(merged_data->th_merged_data->array, n); */
+    /* } else { */
+    /*     fprintf(stdout, "Average of merged sorted array: %f\n", */
+    /*             *merged_data->th_merged_data->avg); */
+    /*     print_array(merged_data->th_merged_data->array, 10); */
+    /* } */
 
     free(A_first_half_data->avg);
     free(A_second_half_data->avg);

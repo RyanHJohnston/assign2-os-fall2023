@@ -1,4 +1,5 @@
 #include "lib.h"
+#include <stdio.h>
 
 void
 print_array(double *array, int length)
@@ -124,6 +125,7 @@ merge_thread_avg(void *arg)
     int i;
     
     merged_thread_data = (MergedThreadData*)arg;
+    
     length = (merged_thread_data->th_data_0->length + 
             merged_thread_data->th_data_1->length);
     array = (double*)malloc(sizeof(double) * length);

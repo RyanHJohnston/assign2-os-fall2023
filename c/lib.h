@@ -12,8 +12,8 @@
 #include <ctype.h> 
 #include <time.h>
 
-#define DOUBLE_MIN 0.0
-#define DOUBLE_MAX 1.0
+#define DOUBLE_MIN 1.0
+#define DOUBLE_MAX 1000.0
 #define COPY_ARRAY_INDEX 0
 
 typedef struct ThreadData {
