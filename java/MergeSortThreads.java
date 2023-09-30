@@ -85,20 +85,6 @@ public class MergeSortThreads {
         endTime = System.currentTimeMillis();
 
         System.out.println("Sorting is done in " + (endTime - startTime) + "ms when one thread is used.");
-        
-        if (arraySize < 10) {
-            System.out.println("Average of array: " + mergedData.thMergedData.avg);
-            for (int i = 0; i < arraySize; ++i) {
-                System.out.println(mergedData.thMergedData.array[i]);
-            }
-        } else {
-            System.out.println("Average of array:  " + mergedData.thMergedData.avg);
-            for (int i = 0; i < 10; ++i) {
-                System.out.println(mergedData.thMergedData.array[i]);
-            }
-        }
-        
-
     }
 
     void printArray(double[] array) {
