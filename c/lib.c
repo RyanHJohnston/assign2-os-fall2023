@@ -70,58 +70,6 @@ selection_sort(double *array, int n)
     }
 }
 
-
-static double *
-merge_sorted_arrays(double *A, double *B, int A_length, int B_length)
-{
-    int n = A_length;
-    int m = B_length;
-    int i;
-    int j;
-    int k;
-    double *C;
-    
-    i = 0;
-    j = 0;
-    k = 0;
-    C = (double*)malloc(sizeof(A) + sizeof(B));
-
-    if (C == NULL || !C) {
-        fprintf(stderr, 
-                "Memory was not successfully allocated into C array in merge_sorted_arrays\n");
-        free(C);
-        exit(EXIT_FAILURE);
-    }
-
-    while (i < n && j < m) {
-        if (A[i] <= B[j]) {
-            C[k] = A[i];
-            ++i;
-        } else {
-            C[k] = B[j];
-            ++j;
-        }
-        ++k;
-    }
-
-    /* if there are remaining elements in A */
-    while (i < n) {
-        C[i] = A[i];
-        ++i;
-        ++k;
-    }
-
-    /* if there are remaining elements in B */
-    while (j < n) {
-        C[k] = B[j];
-        ++j;
-        ++k;
-    }
-    
-    return C;
-}
-
-
 void *
 sort_thread_avg(void *arg)
 {
