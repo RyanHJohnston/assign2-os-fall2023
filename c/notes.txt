@@ -17,3 +17,6 @@ I wonder why that is?
 Anyways, it's good to know that my memory management intution works perfectly on the fox servers.
 Not sure if it's a human error or not.
 I'll work on the project later tonight after writing out the proofs for quantum logic.
+
+
+You need to write a merge_sorted_array method that will combine both sorted arrays in O(n + m) time
